@@ -35,11 +35,20 @@ namespace Inmobiliaria.Controllers
             {
                 int id = int.Parse(TempData["IdPropietario"].ToString());
                 listaInmuebles = inmuebles.BuscarPorPropietario(id);
+                if (listaInmuebles.Count == 0)
+                {
+                    TempData["Mensaje"] = "Nada para mostrar";
+                    return RedirectToAction("Index", "Propietario");
+                }
 
             } else if (TempData["Disponibles"] != null)
             {
                 listaInmuebles = inmuebles.ObtenerDisponibles();
-                
+                if (listaInmuebles.Count == 0)
+                {
+                    ViewBag.Mensaje = "Nada para mostrar";
+                }
+
             } else if (TempData["Tipo"] != null)
             {
                 Inmueble inmueble = new Inmueble
@@ -50,11 +59,22 @@ namespace Inmobiliaria.Controllers
                     Precio = Convert.ToDecimal(TempData["Precio"]),
                 };
                 listaInmuebles = inmuebles.Buscar(inmueble);
+                if (listaInmuebles.Count == 0)
+                {
+                    ViewBag.Mensaje = "Nada para mostrar";
+                }
 
             } else
             {
                 listaInmuebles = inmuebles.ObtenerTodos();
             }
+
+            if (TempData.ContainsKey("Id"))
+                ViewBag.Id = TempData["Id"];
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
+            if (TempData.ContainsKey("Error"))
+                ViewBag.Error = TempData["Error"];
 
             return View(listaInmuebles);
         }
@@ -80,7 +100,9 @@ namespace Inmobiliaria.Controllers
                 if (ModelState.IsValid)
                 {
                     inmuebles.Alta(entidad);
-                    //TempData["Id"] = entidad.Id;
+
+                    TempData["Id"] = entidad.Id;
+
                     return RedirectToAction(nameof(Index));
                 }
                 else
@@ -89,11 +111,11 @@ namespace Inmobiliaria.Controllers
                     return View(entidad);
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
                 ViewBag.Propietarios = propietarios.ObtenerTodos();
-                /*ViewBag.Error = ex.Message;
-                ViewBag.StackTrate = ex.StackTrace;*/
+                ViewBag.Error = e.Message;
+
                 return View(entidad);
             }
         }
@@ -118,10 +140,14 @@ namespace Inmobiliaria.Controllers
                 inmueble.Id = id;
                 inmuebles.Modificacion(inmueble);
 
+                TempData["Mensaje"] = "Se han actualizado los datos del inmueble";
+
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
+                ViewBag.Error = e.Message;
+
                 return View();
             }
         }
@@ -129,18 +155,9 @@ namespace Inmobiliaria.Controllers
         [Authorize]
         public ActionResult MostrarContratos(int id)
         {
-            var listaContratos = contratos.BuscarPorInmueble(id);
+            TempData["IdInmueble"] = id;
 
-            if (listaContratos.Count > 0)
-            {
-                TempData["IdInmueble"] = id;
-
-                return RedirectToAction("Index", "Contrato");
-            }
-
-
-
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Contrato");
 
         }
 
@@ -188,8 +205,10 @@ namespace Inmobiliaria.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
+                ViewBag.Error = e.Message;
+
                 return View();
             }
         }

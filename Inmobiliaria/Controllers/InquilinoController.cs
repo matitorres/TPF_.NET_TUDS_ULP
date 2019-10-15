@@ -26,6 +26,14 @@ namespace Inmobiliaria.Controllers
         public ActionResult Index()
         {
             var listaInquilinos = inquilinos.ObtenerTodos();
+
+            if (TempData.ContainsKey("Id"))
+                ViewBag.Id = TempData["Id"];
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
+            if (TempData.ContainsKey("Error"))
+                ViewBag.Error = TempData["Error"];
+
             return View(listaInquilinos);
         }
 
@@ -46,10 +54,14 @@ namespace Inmobiliaria.Controllers
             {
                 inquilinos.Alta(inquilino);
 
+                TempData["Id"] = inquilino.Id;
+
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
+                ViewBag.Error = e.Message;
+
                 return View();
             }
         }
@@ -73,10 +85,14 @@ namespace Inmobiliaria.Controllers
                 inquilino.Id = id;
                 inquilinos.Modificacion(inquilino);
 
+                TempData["Mensaje"] = "Se han actualizado los datos del inquilino";
+
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
+                ViewBag.Error = e.Message;
+
                 return View();
             }
         }

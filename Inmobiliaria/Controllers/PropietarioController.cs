@@ -27,6 +27,14 @@ namespace Inmobiliaria.Controllers
         public ActionResult Index()
         {
             var listaPropietarios = propietarios.ObtenerTodos();
+
+            if (TempData.ContainsKey("Id"))
+                ViewBag.Id = TempData["Id"];
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
+            if (TempData.ContainsKey("Error"))
+                ViewBag.Error = TempData["Error"];
+
             return View(listaPropietarios);
         }
 
@@ -49,17 +57,22 @@ namespace Inmobiliaria.Controllers
                 {
                     propietario.Salt = "123";
                     propietarios.Alta(propietario);
+
+                    TempData["Id"] = propietario.Id;
+
+                    return RedirectToAction(nameof(Index));
                 }
                 else
                 {
                     return View(propietario);
                 }
 
-                return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
-                return View(propietario);
+                ViewBag.Error = e.Message;
+
+                return View();
             }
         }
 
@@ -81,35 +94,15 @@ namespace Inmobiliaria.Controllers
             {
                 propietario.Id = id;
                 propietarios.Modificacion(propietario);
+
+                TempData["Mensaje"] = "Se han actualizado los datos del propietario";
+
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
-                return View();
-            }
-        }
+                ViewBag.Error = e.Message;
 
-        // GET: Propietario/Delete/5
-        [Authorize]
-        public ActionResult Delete(int id)
-        {
-            var propietario = propietarios.ObtenerPorId(id);
-            return View(propietario);
-        }
-
-        // POST: Propietario/Delete/5
-        [Authorize]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                propietarios.Baja(id);
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
                 return View();
             }
         }
@@ -118,6 +111,7 @@ namespace Inmobiliaria.Controllers
         public ActionResult MostrarInmuebles(int id)
         {
             TempData["IdPropietario"] = id;
+
             return RedirectToAction("Index", "Inmueble");
         }
     }

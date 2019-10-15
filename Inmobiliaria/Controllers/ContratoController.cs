@@ -37,20 +37,41 @@ namespace Inmobiliaria.Controllers
             {
                 int idInquilino = Convert.ToInt32(TempData["IdInquilino"]);
                 listaContratos = contratos.BuscarPorInquilino(idInquilino);
+                if (listaContratos.Count == 0)
+                {
+                    TempData["Mensaje"] = "Nada para mostrar";
+                    return RedirectToAction("Index", "Inquilino");
+                }
             }
             else if (TempData.ContainsKey("IdInmueble"))
             {
                 int idInmueble = Convert.ToInt32(TempData["IdInmueble"]);
                 listaContratos = contratos.BuscarPorInmueble(idInmueble);
+                if (listaContratos.Count == 0)
+                {
+                    TempData["Mensaje"] = "Nada para mostrar";
+                    return RedirectToAction("Index", "Inmueble");
+                }
             }
             else if (TempData["Vigentes"] != null)
             {
                 listaContratos = contratos.BuscarVigentes();
+                if (listaContratos.Count == 0)
+                {
+                    ViewBag.Mensaje = "Nada para mostrar";
+                }
             }
             else
             {
                 listaContratos = contratos.ObtenerTodos();
             }
+
+            if (TempData.ContainsKey("Id"))
+                ViewBag.Id = TempData["Id"];
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
+            if (TempData.ContainsKey("Error"))
+                ViewBag.Error = TempData["Error"];
 
             return View(listaContratos);
         }
@@ -66,6 +87,9 @@ namespace Inmobiliaria.Controllers
             {
                 ViewBag.IdInmueble = 1;
             }
+
+            if (TempData.ContainsKey("Error"))
+                ViewBag.Error = TempData["Error"];
 
             ViewBag.Inmuebles = inmuebles.ObtenerTodos();
             ViewBag.Inquilinos = inquilinos.ObtenerTodos();
@@ -90,6 +114,9 @@ namespace Inmobiliaria.Controllers
                     if (ModelState.IsValid)
                     {
                         contratos.Alta(contrato);
+
+                        TempData["Id"] = contrato.Id;
+
                         return RedirectToAction(nameof(Index));
                     }
                     else
@@ -101,47 +128,22 @@ namespace Inmobiliaria.Controllers
                     }
                 } else
                 {
+                    ViewBag.Error = "Conflicto con otros contratos o inmueble deshabilitado";
+
                     ViewBag.Inmuebles = inmuebles.ObtenerTodos();
                     ViewBag.Inquilinos = inquilinos.ObtenerTodos();
 
                     return View(contrato);
                 }
             }
-            catch
+            catch (Exception e)
             {
+                ViewBag.Error = e.Message;
+
                 ViewBag.Inmuebles = inmuebles.ObtenerTodos();
                 ViewBag.Inquilinos = inquilinos.ObtenerTodos();
 
                 return View();
-            }
-        }
-
-        // GET: Inmueble/Delete/5
-        [Authorize]
-        public ActionResult Delete(int id)
-        {
-            var contrato = contratos.ObtenerPorId(id);
-
-            return View(contrato);
-        }
-
-        // POST: Inmueble/Delete/5
-        [Authorize]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                contratos.Baja(id);
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                Contrato contrato = contratos.ObtenerPorId(id);
-
-                return View(contrato);
             }
         }
 
@@ -171,6 +173,9 @@ namespace Inmobiliaria.Controllers
                     if (ModelState.IsValid)
                     {
                         contratos.Alta(contrato);
+
+                        TempData["Mensaje"] = "Se renovó el contrato con éxito";
+
                         return RedirectToAction(nameof(Index));
                     }
                     else
@@ -183,14 +188,18 @@ namespace Inmobiliaria.Controllers
                 }
                 else
                 {
+                    ViewBag.Error = "Conflicto con otros contratos";
+
                     ViewBag.Inmuebles = inmuebles.ObtenerTodos();
                     ViewBag.Inquilinos = inquilinos.ObtenerTodos();
 
                     return View(contrato);
                 }
             }
-            catch
+            catch (Exception e)
             {
+                ViewBag.Error = e.Message;
+
                 ViewBag.Inmuebles = inmuebles.ObtenerTodos();
                 ViewBag.Inquilinos = inquilinos.ObtenerTodos();
 
@@ -207,6 +216,8 @@ namespace Inmobiliaria.Controllers
 
             if (!ValidarPagos(contrato))
             {
+                TempData["Error"] = "Pagos pendientes";
+
                 return RedirectToAction(nameof(Index));
             }
 
@@ -227,10 +238,14 @@ namespace Inmobiliaria.Controllers
 
                 contratos.Modificacion(contrato);
 
+                TempData["Mensaje"] = "Se canceló el contrato con éxito";
+
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
+                ViewBag.Error = e.Message;
+
                 var contrato = contratos.ObtenerPorId(id);
 
                 return View(contrato);

@@ -30,7 +30,7 @@ namespace Inmobiliaria.Controllers
         {
             if (!TempData.ContainsKey("IdContrato")) return RedirectToAction("Index", "Contrato");
 
-                Contrato contrato = new Contrato
+            Contrato contrato = new Contrato
             {
                 Id = Convert.ToInt32(TempData["IdContrato"]),
                 Precio = Convert.ToDecimal(TempData["PrecioContrato"])
@@ -46,6 +46,13 @@ namespace Inmobiliaria.Controllers
                     Contrato = contrato
                 });
             }
+
+            if (TempData.ContainsKey("Id"))
+                ViewBag.Id = TempData["Id"];
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
+            if (TempData.ContainsKey("Error"))
+                ViewBag.Error = TempData["Error"];
 
             return View(listaPagos);
         }
@@ -64,11 +71,14 @@ namespace Inmobiliaria.Controllers
 
                 TempData["IdContrato"] = pago.Contrato.Id;
                 TempData["PrecioContrato"] = pago.Contrato.Precio;
+                TempData["Id"] = pago.Id;
 
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
+                TempData["Error"] = e.Message;
+
                 TempData["IdContrato"] = pago.Contrato.Id;
                 TempData["PrecioContrato"] = pago.Contrato.Precio;
 
@@ -100,10 +110,14 @@ namespace Inmobiliaria.Controllers
 
                 pagos.Baja(id);
 
+                TempData["Mensaje"] = "Se ha eliminado el pago con ID: " + pago.Id;
+
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
+                ViewBag.Error = e.Message;
+
                 return View();
             }
         }

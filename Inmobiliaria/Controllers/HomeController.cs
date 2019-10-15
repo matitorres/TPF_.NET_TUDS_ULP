@@ -28,6 +28,9 @@ namespace Inmobiliaria.Controllers
         [Authorize]
         public IActionResult Index()
         {
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
+
             return RedirectToAction("Index", "Inmueble");
         }
 
@@ -55,7 +58,8 @@ namespace Inmobiliaria.Controllers
 
                     if (clave != hashedClaveIngresada)
                     {
-                        ViewBag.Mensaje = "Datos inválidos";
+                        ViewBag.Mensaje = "Usuario y/o contraseña incorrectos";
+
                         return View();
                     }
 
@@ -83,7 +87,8 @@ namespace Inmobiliaria.Controllers
 
                 } else
                 {
-                    ViewBag.Mensaje = "Datos inválidos";
+                    ViewBag.Mensaje = "Usuario y/o contraseña incorrectos";
+
                     return View();
                 }
 
@@ -91,7 +96,7 @@ namespace Inmobiliaria.Controllers
             catch (Exception ex)
             {
                 ViewBag.Error = ex.Message;
-                ViewBag.StackTrate = ex.StackTrace;
+
                 return View();
             }
         }

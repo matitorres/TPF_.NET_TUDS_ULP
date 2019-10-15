@@ -28,6 +28,11 @@ namespace Inmobiliaria.Controllers
         {
             var listaAgentes = agentes.ObtenerTodos();
 
+            if (TempData.ContainsKey("Id"))
+                ViewBag.Id = TempData["Id"];
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
+
             return View(listaAgentes);
         }
 
@@ -50,7 +55,9 @@ namespace Inmobiliaria.Controllers
 
                 if (agenteExistente != null)
                 {
-                    return View();
+                    ViewBag.Error = "Ya existe un usuario con ese correo electrónico";
+
+                    return View(agente);
                 }
 
                 agente.Salt = GenerarSalt();
@@ -62,10 +69,14 @@ namespace Inmobiliaria.Controllers
                         numBytesRequested: 256 / 8));
                 agentes.Alta(agente);
 
+                TempData["Id"] = agente.Id;
+
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
+                TempData["Error"] = e.Message;
+
                 return View();
             }
         }
@@ -98,6 +109,8 @@ namespace Inmobiliaria.Controllers
 
                     agentes.ModificarClave(agenteClaveNueva);
 
+                    TempData["Mensaje"] = "¡Éxito! Contraseña modificada";
+
                     if (User.IsInRole("Administrador"))
                     {
                         return RedirectToAction(nameof(Index));
@@ -107,11 +120,15 @@ namespace Inmobiliaria.Controllers
 
                 } else
                 {
+                    ViewBag.Error = "Contraseña incorrecta";
+
                     return View();
                 }
             }
-            catch
+            catch (Exception e)
             {
+                ViewBag.Error = e.Message;
+
                 return View();
             }
         }
