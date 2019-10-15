@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Inmobiliaria.Models.Pago>
+
+@{
+    ViewData["Title"] = "Index";
+    Pago pago = @Model.First();
+}
+
+<div class="d-flex flex-row-reverse align-items-center pt-2 pr-3">
+    <div class="align-self-center"><a asp-action="Create" asp-route-id="@pago.Id" asp-route-idcontrato="@pago.Contrato.Id" class="float-right mx-2 pt-1 text-success"><h3>+</h3></a></div>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NumeroPago)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Fecha)
+            </th>
+            <th>Importe</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.First().Id != 0)
+        {
+            @foreach (var item in Model) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumeroPago)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Fecha)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Contrato.Precio)
+                    </td>
+                    <td style="text-align: right;">
+                        <a asp-action="Delete" asp-route-id="@item.Id" title="Borrar" class="mx-1 text-danger"><span class="lnr lnr-cross font-weight-bold"></span></a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

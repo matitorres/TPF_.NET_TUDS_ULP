@@ -1,0 +1,62 @@
+﻿@model IEnumerable<Inmobiliaria.Models.Contrato>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="d-flex flex-row-reverse align-items-center py-2 pr-3">
+    <div class="align-self-center"><a asp-action="Create" class="float-right mx-2 mt-1 text-success"><h3>+</h3></a></div>
+    <div class="align-self-center"><a asp-action="MostrarVigentes" class="float-right mx-2 text-dark">Mostrar vigentes</a></div>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaInicio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaFin)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Precio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Inquilino)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Inmueble)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model)
+{
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaInicio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaFin)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Precio)
+            </td>
+            <td>
+                @(item.Inquilino.Id + " - " + item.Inquilino.Apellido.ToUpper() + ", " + item.Inquilino.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Inmueble.Direccion)
+            </td>
+            <td style="text-align: right;">
+                <a asp-action="Renovar" asp-route-id="@item.Id" title="Renovar contrato" class="text-success mx-1"><span class="lnr lnr-sync font-weight-bold"></span></a>&nbsp;
+                @if (DateTime.Compare(DateTime.Now, item.FechaFin) < 0)
+                {
+                    <a asp-action="Cancelar" asp-route-id="@item.Id" title="Cancelar contrato" class="text-danger mx-1"><span class="lnr lnr-cross-circle font-weight-bold"></span></a>
+                }
+                <a asp-action="MostrarPagos" asp-route-id="@item.Id" title="Mostrar pagos" class="mx-1 text-dark"><span class="lnr lnr-list font-weight-bold"></span></a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

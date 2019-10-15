@@ -1,0 +1,37 @@
+﻿@model Inmobiliaria.Models.Agente
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h4 class="mt-4">Crear usuario</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4 mx-auto">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Mail" class="control-label"></label>
+                <input asp-for="Mail" class="form-control" />
+                <span asp-validation-for="Mail" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Clave" class="control-label"></label>
+                <input asp-for="Clave" class="form-control" />
+                <span asp-validation-for="Clave" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Rol" class="control-label"></label>
+                <input asp-for="Rol" class="form-control" />
+                <span asp-validation-for="Rol" class="text-danger"></span>
+            </div>
+            <div class="form-group d-flex flex-row-reverse align-items-center">
+                <input type="submit" value="Agregar usuario" class="btn btn-dark" />
+                <div class="mr-3">
+                    <a asp-action="Index" class="text-dark">Cancelar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

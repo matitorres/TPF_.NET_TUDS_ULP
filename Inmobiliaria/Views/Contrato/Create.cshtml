@@ -1,0 +1,74 @@
+﻿@model Inmobiliaria.Models.Contrato
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h4 class="mt-4">Agregar contrato</h4>
+<hr />
+<form asp-action="Create">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label asp-for="FechaInicio" class="control-label"></label>
+                <input asp-for="FechaInicio" class="form-control" />
+                <span asp-validation-for="FechaInicio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaFin" class="control-label"></label>
+                <input asp-for="FechaFin" class="form-control" />
+                <span asp-validation-for="FechaFin" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Precio" class="control-label"></label>
+                <input asp-for="Precio" class="form-control" />
+                <span asp-validation-for="Precio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NombreGarante" class="control-label"></label>
+                <input asp-for="NombreGarante" class="form-control" />
+                <span asp-validation-for="NombreGarante" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label asp-for="DniGarante" class="control-label"></label>
+                <input asp-for="DniGarante" class="form-control" />
+                <span asp-validation-for="DniGarante" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TelefonoGarante" class="control-label"></label>
+                <input asp-for="TelefonoGarante" class="form-control" />
+                <span asp-validation-for="TelefonoGarante" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Inquilino</label>
+                <select class="form-control" name="Inquilino">
+                    @foreach (var item in (IList<Inquilino>)ViewBag.Inquilinos)
+                    {
+                        <option value="@item.Id">@(item.Id + " - " + item.Apellido.ToUpper() + ", " + item.Nombre)</option>
+                    }
+                </select>
+                <span asp-validation-for="Inquilino" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Inmueble</label>
+                <select class="form-control" name="Inmueble">
+                    @foreach (var item in (IList<Inmueble>)ViewBag.Inmuebles)
+                    {
+                        @:<option @(item.Id == Convert.ToInt32(ViewBag.IdInmueble) ? "selected" : "") value="@item.Id">@(item.Id + " - " + item.Direccion)</option>
+                    }
+                </select>
+                <span asp-validation-for="Inmueble" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group d-flex flex-row-reverse align-items-center">
+        <input type="submit" value="Agregar contrato" class="btn btn-dark" />
+        <div class="mr-3">
+            <a asp-action="Index" class="text-dark">Cancelar</a>
+        </div>
+    </div>
+</form>
+

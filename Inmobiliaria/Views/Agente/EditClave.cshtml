@@ -1,0 +1,34 @@
+﻿@model Inmobiliaria.Models.Agente
+
+@{
+    ViewData["Title"] = "EditClave";
+}
+
+<h4 class="mt-4">Cambiar contraseña de usuario</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4 mx-auto">
+        <form asp-action="EditClave">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label for="clave-actual" class="control-label">Contraseña actual</label>
+                <input name="clave-actual" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Clave" class="control-label">Contraseña nueva</label>
+                <input asp-for="Clave" value="" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="clave-repetir" class="control-label">Repetir contraseña nueva</label>
+                <input name="clave-repetir" class="form-control" />
+            </div>
+            <div class="form-group d-flex flex-row-reverse align-items-center">
+                <input type="submit" value="Cambiar contraseña" class="btn btn-dark" />
+                <div class="mr-3">
+                    <a asp-action="Index" class="text-dark">Cancelar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

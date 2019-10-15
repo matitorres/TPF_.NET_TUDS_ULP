@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Inmobiliaria.Models.Inmueble>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="d-flex flex-row-reverse align-items-center pt-2 pr-3">
+    <div class="align-self-center"><a asp-action="Create" class="float-right mx-2 pt-1 text-success"><h3>+</h3></a></div>
+    <div class="align-self-center"><a asp-action="Buscar" class="float-right mx-2 mt-1 text-dark"><span class="lnr lnr-magnifier font-weight-bold"></span></a></div>
+    <div class="align-self-center"><a asp-action="MostrarDisponibles" class="float-right mx-2 text-dark">Mostrar disponibles</a></div>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Direccion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tipo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Uso)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ambientes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Propietario)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Precio)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Direccion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tipo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Uso)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ambientes)
+            </td>
+            <td>
+                <span class="lnr @(item.Estado ? "lnr-thumbs-up text-success" : "lnr-thumbs-down text-dark") font-weight-bold"></span>
+            </td>
+            <td>
+                @(item.Propietario.Nombre + " " + item.Propietario.Apellido)
+            </td>
+            <td>
+                $@Html.DisplayFor(modelItem => item.Precio)
+            </td>
+            <td style="text-align: right;">
+                <a asp-action="Edit" asp-route-id="@item.Id" title="Editar" class="mx-1 text-dark"><span class="lnr lnr-pencil font-weight-bold"></span></a>&nbsp;
+                <a asp-action="MostrarContratos" asp-route-id="@item.Id" title="Ver contratos" class="mx-1 text-dark"><span class="lnr lnr-layers font-weight-bold"></span></a>&nbsp;
+                <a asp-action="CrearContrato" asp-route-id="@item.Id" title="Crear contratos" class="mx-1 text-success"><span class="lnr lnr-file-add font-weight-bold"></span></a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

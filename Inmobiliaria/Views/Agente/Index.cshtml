@@ -1,0 +1,43 @@
+﻿@model IEnumerable<Inmobiliaria.Models.Agente>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="d-flex flex-row-reverse align-items-center pt-2 pr-3">
+    <div class="align-self-center"><a asp-action="Create" class="float-right mx-2 pt-1 text-success"><h3>+</h3></a></div>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Rol)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rol)
+            </td>
+            <td style="text-align: right;">
+                <a asp-action="EditClave" asp-route-id="@item.Id" title="EditarClave" class="pr-3 text-dark font-weight-bold">Cambiar contraseña</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

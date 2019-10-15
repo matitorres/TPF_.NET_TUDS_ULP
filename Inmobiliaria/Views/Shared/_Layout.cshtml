@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/main.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
+    <title>@ViewBag.Title</title>
+</head>
+<body onload="init()">
+    @if (User.Identity.IsAuthenticated)
+    {
+    <header>
+        <nav class="site-header sticky-top pt-3">
+            <div class="container d-flex flex-row align-items-center justify-content-between px-4 py-2">
+                <a class="py-2" asp-controller="Home" asp-action="Index"><img src="~/img/LogoDomum.png"></a>
+                <a class="py-2 d-none d-md-inline-block font-weight-bold text-dark text-decoration-none" asp-controller="Inmueble" asp-action="Index">Inmuebles</a>
+                <a class="py-2 d-none d-md-inline-block font-weight-bold text-dark text-decoration-none" asp-controller="Propietario" asp-action="Index">Propietarios</a>
+                <a class="py-2 d-none d-md-inline-block font-weight-bold text-dark text-decoration-none" asp-controller="Contrato" asp-action="Index">Alquileres</a>
+                <a class="py-2 d-none d-md-inline-block font-weight-bold text-dark text-decoration-none" asp-controller="Inquilino" asp-action="Index">Inquilinos</a>
+                
+                @if (User.IsInRole("Administrador"))
+                {
+                    <a class="py-2 d-none d-md-inline-block font-weight-bold text-dark text-decoration-none" asp-controller="Agente" asp-action="Index">Usuarios</a>
+                }
+                <div class="dropdown mr-4">
+                    <a class="dropdown-toggle text-dark text-decoration-none" href="#" role="button" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent" data-display="static">
+                        <span class="lnr lnr-user font-weight-bold"></span>
+                    </a>
+
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item text-dark" asp-controller="Agente" asp-action="EditClave" asp-route-id="@User.Claims.Where(x => x.Type == "http://example/identity/claims/id").FirstOrDefault().Value">Cambiar contraseña</a>
+                        <a class="dropdown-item text-dark" asp-controller="Home" asp-action="Logout"><i class="lnr lnr-exit"></i> Salir</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    }
+    <main role="main">
+        <div class="container">
+            @if (ViewBag.Id != null)
+            {//alta exitosa
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>¡Éxito!</strong> La entidad fue dada de alta con id: @ViewBag.Id
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true"><span class="lnr lnr-cross-circle"></span></span>
+                    </button>
+                </div>
+            }
+            else if (ViewBag.Mensaje != null)
+            {//cartel general
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    <strong>Información:</strong> @ViewBag.Mensaje
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true"><span class="lnr lnr-cross-circle"></span></span>
+                    </button>
+                </div>
+            }
+            else if (ViewBag.Error != null)
+            {//alta exitosa
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>¡Error!</strong> @ViewBag.Error
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true"><span class="lnr lnr-cross-circle"></span></span>
+                    </button>
+                </div>
+            }
+            else if (!String.IsNullOrWhiteSpace(ViewBag.Error))
+            {//ocurrió un error
+                <environment names="Development">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>¡Error!</strong> Ocurrió: @ViewBag.Error
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true"><span class="lnr lnr-cross-circle"></span></span>
+                        </button>
+                        <a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false"><span class="lnr lnr-plus-circle"></span></a>
+                        <div class="collapse multi-collapse" id="multiCollapseExample1">
+                            @ViewBag.StackTrace
+                        </div>
+                    </div>
+                </environment>
+            }
+            <div>
+                @RenderBody()
+            </div>
+        </div>
+    </main>
+    @RenderSection("Scripts", false)
+    @await Html.PartialAsync("_ScriptsPartial")
+    <script type="text/javascript">
+        function init() {
+            $('.alert').alert();
+        }
+    </script>
+</body>
+</html>

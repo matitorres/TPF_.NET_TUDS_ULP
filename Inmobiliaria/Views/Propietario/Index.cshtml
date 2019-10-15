@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Inmobiliaria.Models.Propietario>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="d-flex flex-row-reverse align-items-center pt-2 pr-3">
+    <div class="align-self-center"><a asp-action="Create" class="float-right mx-2 pt-1 text-success"><h3>+</h3></a></div>
+    <div class="align-self-center"><a asp-action="Buscar" class="float-right mx-2 mt-1 text-dark"><span class="lnr lnr-magnifier font-weight-bold"></span></a></div>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Apellido)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Dni)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Telefono)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaAlta)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Apellido)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Dni)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Telefono)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaAlta)
+            </td>
+            <td style="text-align: right;">
+                <a asp-action="Edit" asp-route-id="@item.Id" title="Editar" class="mx-1 text-dark"><span class="lnr lnr-pencil font-weight-bold"></span></a>&nbsp;
+                <a asp-action="MostrarInmuebles" asp-route-id="@item.Id" title="Mostrar propiedades" class="mx-1 text-dark"><span class="lnr lnr-apartment font-weight-bold"></span></a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

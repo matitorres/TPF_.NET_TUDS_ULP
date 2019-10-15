@@ -1,0 +1,56 @@
+﻿@model Inmobiliaria.Models.Contrato
+
+@{
+    ViewData["Title"] = "Renovar";
+}
+
+    <h4 class="mt-4">Renovar contrato: <span class="font-weight-light">@(Model.Inquilino.Nombre + " " + Model.Inquilino.Apellido) || @(Model.Inmueble.Direccion)</span></h4>
+<hr />
+<form asp-action="Renovar">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label asp-for="FechaInicio" class="control-label"></label>
+                <input asp-for="FechaInicio" class="form-control" />
+                <span asp-validation-for="FechaInicio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaFin" class="control-label"></label>
+                <input asp-for="FechaFin" class="form-control" />
+                <span asp-validation-for="FechaFin" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Precio" class="control-label"></label>
+                <input asp-for="Precio" class="form-control" />
+                <span asp-validation-for="Precio" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label asp-for="NombreGarante" class="control-label"></label>
+                <input asp-for="NombreGarante" class="form-control" />
+                <span asp-validation-for="NombreGarante" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DniGarante" class="control-label"></label>
+                <input asp-for="DniGarante" class="form-control" />
+                <span asp-validation-for="DniGarante" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TelefonoGarante" class="control-label"></label>
+                <input asp-for="TelefonoGarante" class="form-control" />
+                <span asp-validation-for="TelefonoGarante" class="text-danger"></span>
+            </div>
+            <input type="hidden" value="@(Model.Inquilino.Id)" name="Inquilino" />
+            <input type="hidden" value="@(Model.Inmueble.Id)" name="Inmueble" />
+        </div>
+    </div>
+    <div class="form-group d-flex flex-row-reverse align-items-center">
+        <input type="submit" value="Renovar contrato" class="btn btn-dark" />
+        <div class="mr-3">
+            <a asp-action="Index" class="text-dark">Cancelar</a>
+        </div>
+    </div>
+</form>
+
